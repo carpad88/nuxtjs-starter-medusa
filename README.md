@@ -1,69 +1,63 @@
-# nuxtjs-storefront
+<h1 align="center">
+  Medusa Nuxt.js Starter
+</h1>
+<p align="center">
+Medusa is an open-source headless commerce engine that enables developers to create amazing digital commerce experiences.
+</p>
+<p align="center">
+  <a href="https://github.com/medusajs/medusa/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="Medusa is released under the MIT license." />
+  </a>
+  <a href="https://github.com/medusajs/medusa/blob/master/CONTRIBUTING.md">
+    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat" alt="PRs welcome!" />
+  </a>
+  <a href="https://discord.gg/xpCwq3Kfn8">
+    <img src="https://img.shields.io/badge/chat-on%20discord-7289DA.svg" alt="Discord Chat" />
+  </a>
+  <a href="https://twitter.com/intent/follow?screen_name=medusajs">
+    <img src="https://img.shields.io/twitter/follow/medusajs.svg?label=Follow%20@medusajs" alt="Follow @medusajs" />
+  </a>
+</p>
 
-## Build Setup
+> **Prerequisites**: To use the starter you should have a Medusa server running locally on port 9000. Check out [medusa-starter-default](https://github.com/medusajs/medusa-starter-default) for a quick setup.
+## Quickstart
 
-```bash
-# install dependencies
-$ yarn install
+1. **Clone this repository**
 
-# serve with hot reload at localhost:3000
-$ yarn dev
+   Clone this repository by running the following command
 
-# build for production and launch server
-$ yarn build
-$ yarn start
+   ```shell
+   git clone https://github.com/carpad88/nuxtjs-starter-medusa.git nuxtjs-storefront
+   ```
 
-# generate static project
-$ yarn generate
-```
+2. **Install dependencies**
 
-For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
+   Use Yarn to install all dependencies.
 
-## Special Directories
+   ```shell
+   yarn
+   ```
 
-You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.
+3. **Start developing.**
 
-### `assets`
+   You are now ready to start up your project.
 
-The assets directory contains your uncompiled assets such as Stylus or Sass files, images, or fonts.
+   ```shell
+   yarn dev
+   ```
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/assets).
+4. **Open the code and start customizing!**
 
-### `components`
+   Your site is now running at http://localhost:3333!
 
-The components directory contains your Vue.js components. Components make up the different parts of your page and can be reused and imported into your pages, layouts and even other components.
+   Edit `/pages/index.js` to see your site update in real-time!
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/components).
+5. **Learn more about Medusa**
 
-### `layouts`
+  - [Website](https://www.medusa-commerce.com/)
+  - [GitHub](https://github.com/medusajs)
+  - [Documentation](https://docs.medusa-commerce.com/)
 
-Layouts are a great help when you want to change the look and feel of your Nuxt app, whether you want to include a sidebar or have distinct layouts for mobile and desktop.
+6. **Learn more about Nuxt.js**
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/layouts).
-
-
-### `pages`
-
-This directory contains your application views and routes. Nuxt will read all the `*.vue` files inside this directory and setup Vue Router automatically.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/get-started/routing).
-
-### `plugins`
-
-The plugins directory contains JavaScript plugins that you want to run before instantiating the root Vue.js Application. This is the place to add Vue plugins and to inject functions or constants. Every time you need to use `Vue.use()`, you should create a file in `plugins/` and add its path to plugins in `nuxt.config.js`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/plugins).
-
-### `static`
-
-This directory contains your static files. Each file inside this directory is mapped to `/`.
-
-Example: `/static/robots.txt` is mapped as `/robots.txt`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/static).
-
-### `store`
-
-This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
+  - [Documentation](https://nuxtjs.org/docs)
