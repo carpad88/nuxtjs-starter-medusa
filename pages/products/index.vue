@@ -7,13 +7,21 @@
     </div>
 
     <div class="grid grid-cols-4 gap-8 ">
-      <ProductCard />
+      <ProductCard
+        v-for="product in products"
+        :key="product.id"
+        :item="product"
+      />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ProductsIndex'
+  name: 'ProductsIndex',
+  async asyncData ({ $axios }) {
+    const { products } = await $axios.$get('/store/products')
+    return { products }
+  }
 }
 </script>

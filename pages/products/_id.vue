@@ -4,21 +4,33 @@
       <div class="lg:w-3/5 lg:pr-14">
         <div class="flex">
           <div class="hidden lg:flex flex-col items-center mr-4">
-            <div class="w-auto h-full object-center object-cover p-12">
+            <div class="w-auto h-full object-center object-cover px-4 space-y-4">
               <img
+                v-for="image in product.images"
+                :key="image.id"
+                width="150"
                 alt=""
-                src="https://picsum.photos/150/150"
+                :src="image.url"
+                class="cursor-pointer"
+                @click="imageToShow = image.id"
               >
             </div>
           </div>
-          <div class="relative h-auto w-full flex rounded-lg overflow-hidden">
-            <span class="text-sm absolute right-4 top-3 z-10">1 / 1</span>
 
-            <div class="w-auto h-full object-center object-cover p-12">
-              <img
-                alt=""
-                src="https://picsum.photos/600/600"
+          <div class="h-auto w-full flex-1 flex flex-col rounded-lg overflow-hidden">
+            <div class="w-auto h-full">
+              <div
+                v-for="image in product.images"
+                :key="image.id"
               >
+                <div v-if="image.id === imageToShow">
+                  <img
+                    alt=""
+                    :src="image.url"
+                    class=" w-full"
+                  >
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -26,27 +38,31 @@
 
       <div class="mt-8 lg:mt-0 lg:w-2/5 lg:max-w-xl">
         <h1 class="font-semibold text-3xl">
-          Medusa Coffee Mug
+          {{ product.title }}
         </h1>
         <p class="text-lg mt-2 mb-4">
-          10 EUR
+          {{ product.variants ? product.variants[0].prices[0].amount : 0 }} EUR
         </p>
         <p class="font-light">
-          Every programmer's best friend.
+          {{ product.description }}
         </p>
-        <div class="mt-6">
+        <div v-for="option in product.options" :key="option.id" class="mt-6">
           <div class="text-sm">
             <p class="font-medium mb-2">
-              Select Size
+              {{ option.title }}
             </p>
             <div>
-              <button class="bg-ui-dark text-white inline-flex items-center justify-center rounded-sm text-xs h-12 w-12 mr-2 last:mr-0 hover:bg-ui-dark hover:text-white">
-                One Size
+              <button
+                v-for="value in option.values"
+                :key="value.id"
+                class="bg-ui-dark text-white inline-flex items-center justify-center rounded-sm text-xs h-12 w-12 mr-2 last:mr-0 hover:bg-ui-dark hover:text-white"
+              >
+                {{ value.value }}
               </button>
             </div>
           </div>
         </div>
-        <div class="inline-flex mt-4">
+        <div class="inline-flex mt-12">
           <button class="btn-ui mr-2 px-12">
             Add to bag
           </button>
@@ -72,8 +88,10 @@
             </h3>
             <div v-if="showDetails" class="pt-6">
               <div class="space-y-4 text-ui-dark text-sm">
-                <ul class="list-inside list-disc">
-                  <li>Weight: 0.4 kg</li>
+                <ul class="list-inside list-disc space-y-2">
+                  <li>Weight: {{ product.weight ? `${product.weight} g` : 'Unknown' }}</li>
+                  <li>Width: {{ product.width ? `${product.width} cm` : 'Unknown' }}</li>
+                  <li>Height: {{ product.height ? `${product.height} cm` : 'Unknown' }}</li>
                 </ul>
               </div>
             </div>
@@ -89,8 +107,15 @@ export default {
   name: 'ProductDetail',
   data () {
     return {
-      showDetails: false
+      showDetails: false,
+      imageToShow: '',
+      product: {}
     }
+  },
+  async fetch () {
+    const { product } = await this.$axios.$get(`/store/products/${this.$route.params.id}`)
+    this.product = product
+    this.imageToShow = this.product.images[0].id
   }
 }
 </script>

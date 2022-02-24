@@ -17,7 +17,7 @@
             {{ item.title }}
           </h3>
           <p class="text-sm font-semibold text-gray-900">
-            from {{ item.price }} USD
+            from {{ item.variants[0].prices[0].amount }} USD
           </p>
         </div>
       </div>
@@ -35,12 +35,11 @@ export default {
         return {
           id: 1,
           title: 'Medusa Coffee Mug',
-          price: 10,
+          variants: 10,
           thumbnail: 'https://picsum.photos/600/400'
         }
       }
     }
-
   }
 }
 </script>

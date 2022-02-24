@@ -6,7 +6,7 @@
           <img
             width="600"
             alt=""
-            src="https://picsum.photos/600/600"
+            :src="products[0].thumbnail"
           >
         </div>
         <div>
@@ -45,7 +45,11 @@
         </nuxt-link>
       </div>
       <div class="grid grid-cols-4 gap-8 ">
-        <ProductCard />
+        <ProductCard
+          v-for="product in products"
+          :key="product.id"
+          :item="product"
+        />
       </div>
     </div>
   </div>
@@ -54,6 +58,11 @@
 <script>
 export default {
   name: 'IndexPage',
+  async asyncData ({ $axios }) {
+    let { products } = await $axios.$get('/store/products')
+    products = products.splice(0, 4)
+    return { products }
+  }
 }
 </script>
 
