@@ -6,7 +6,10 @@
       </h1>
     </div>
 
-    <div class="grid grid-cols-4 gap-8 ">
+    <div
+      v-if="products.length"
+      class="grid grid-cols-4 gap-8 "
+    >
       <ProductCard
         v-for="product in products"
         :key="product.id"
@@ -19,9 +22,24 @@
 <script>
 export default {
   name: 'ProductsIndex',
-  async asyncData ({ $axios }) {
-    const { products } = await $axios.$get('/store/products')
-    return { products }
+  data () {
+    return {
+      products: [{
+        id: 1,
+        title: 'Medusa Coffee Mug',
+        thumbnail: '',
+        variants: [{ prices: [{ amount: 0 }] }]
+      }]
+    }
+  },
+  async fetch () {
+    try {
+      const { products } = await this.$axios.$get('/store/products')
+      this.products = products
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('The server is not responding')
+    }
   }
 }
 </script>

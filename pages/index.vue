@@ -6,7 +6,7 @@
           <img
             width="600"
             alt=""
-            :src="products[0].thumbnail"
+            src="https://start.medusajs.com/static/9803c162c71fd1960d9d11253859c701/246b5/hero-merch.webp"
           >
         </div>
         <div>
@@ -23,7 +23,10 @@
       </div>
     </div>
 
-    <div class="container mx-auto px-8 py-16">
+    <div
+      v-if="products.length"
+      class="container mx-auto px-8 py-16"
+    >
       <div class="flex items-center justify-between mb-6">
         <p class="text-2xl font-semibold text-gray-700">
           Featured
@@ -58,10 +61,24 @@
 <script>
 export default {
   name: 'IndexPage',
-  async asyncData ({ $axios }) {
-    let { products } = await $axios.$get('/store/products')
-    products = products.splice(0, 4)
-    return { products }
+  data: () => {
+    return {
+      products: [{
+        id: 1,
+        title: 'Medusa Coffee Mug',
+        thumbnail: '',
+        variants: [{ prices: [{ amount: 0 }] }]
+      }]
+    }
+  },
+  async fetch () {
+    try {
+      const { products } = await this.$axios.$get('/store/products')
+      this.products = products.splice(0, 4)
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('The server is not responding')
+    }
   }
 }
 </script>
@@ -71,5 +88,4 @@ export default {
     @apply py-2 px-4 bg-ui-dark text-white text-sm font-medium rounded-md shadow;
     @apply focus:outline-none focus:ring-2 focus:ring-ui-dark focus:ring-opacity-75 disabled:bg-ui-medium;
   }
-
 </style>

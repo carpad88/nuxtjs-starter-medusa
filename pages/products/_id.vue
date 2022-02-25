@@ -108,14 +108,29 @@ export default {
   data () {
     return {
       showDetails: false,
-      imageToShow: '',
-      product: {}
+      imageToShow: 'default_image',
+      product: {
+        id: 1,
+        title: 'Medusa Coffee Mug',
+        description: 'Every programmer\'s best friend.',
+        thumbnail: '',
+        variants: [{ prices: [{ amount: 0 }] }],
+        images: [
+          { id: 'default_image', url: 'https://picsum.photos/600/400' },
+          { id: 'another_image', url: 'https://picsum.photos/600/400?id=50' }
+        ]
+      }
     }
   },
   async fetch () {
-    const { product } = await this.$axios.$get(`/store/products/${this.$route.params.id}`)
-    this.product = product
-    this.imageToShow = this.product.images[0].id
+    try {
+      const { product } = await this.$axios.$get(`/store/products/${this.$route.params.id}`)
+      this.product = product
+      this.imageToShow = this.product.images[0].id
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('The server is not responding')
+    }
   }
 }
 </script>
