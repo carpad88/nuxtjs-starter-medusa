@@ -40,8 +40,11 @@
         <h1 class="font-semibold text-3xl">
           {{ product.title }}
         </h1>
-        <p class="text-lg mt-2 mb-4">
-          {{ product.variants ? product.variants[0].prices[0].amount : 0 }} EUR
+        <p v-if="product.variants" class="text-lg mt-2 mb-4">
+          {{ product.variants[0].prices[0].amount/100 }} {{ product.variants[0].prices[0].currency_code }}
+        </p>
+        <p v-else>
+          10 USD
         </p>
         <p class="font-light">
           {{ product.description }}
@@ -114,7 +117,7 @@ export default {
         title: 'Medusa Coffee Mug',
         description: 'Every programmer\'s best friend.',
         thumbnail: '',
-        variants: [{ prices: [{ amount: 0 }] }],
+        variants: [{ prices: [{ amount: 0, currency_code: 'usd' }] }],
         images: [
           { id: 'default_image', url: 'https://picsum.photos/600/400' },
           { id: 'another_image', url: 'https://picsum.photos/600/400?id=50' }
@@ -130,6 +133,20 @@ export default {
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log('The server is not responding')
+    }
+  },
+  computed: {
+    lowestPrice () {
+      const lowestPrice = this.product.variants.reduce((acc, curr) => {
+        return curr.prices.reduce((lowest, current) => {
+          if (lowest.amount > current.amount) {
+            return current
+          }
+          return lowest
+        })
+      }, { amount: 0 })
+
+      return lowestPrice || { amount: 10, currency_code: 'usd' }
     }
   }
 }

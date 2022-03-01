@@ -17,7 +17,7 @@
             {{ item.title }}
           </h3>
           <p class="text-sm font-semibold text-gray-900">
-            from {{ item.variants[0].prices[0].amount }} USD
+            from {{ lowestPrice.amount/100 }} {{ lowestPrice.currency_code.toUpperCase() }}
           </p>
         </div>
       </div>
@@ -39,6 +39,20 @@ export default {
           variants: [{ prices: [{ amount: 0 }] }]
         }
       }
+    }
+  },
+  computed: {
+    lowestPrice () {
+      const lowestPrice = this.item.variants.reduce((acc, curr) => {
+        return curr.prices.reduce((lowest, current) => {
+          if (lowest.amount > current.amount) {
+            return current
+          }
+          return lowest
+        })
+      }, { amount: 0 })
+
+      return lowestPrice || { amount: 10, currency_code: 'usd' }
     }
   }
 }

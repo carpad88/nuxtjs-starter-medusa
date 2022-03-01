@@ -28,7 +28,7 @@ export default {
         id: 1,
         title: 'Medusa Coffee Mug',
         thumbnail: '',
-        variants: [{ prices: [{ amount: 0 }] }]
+        variants: [{ prices: [{ amount: 0, currency_code: 'usd' }] }]
       }]
     }
   },
