@@ -49,7 +49,7 @@
         <p class="font-light">
           {{ product.description }}
         </p>
-        <div v-for="option in product.options" :key="option.id" class="mt-6">
+        <div v-for="option in options" :key="option.id" class="mt-6">
           <div class="text-sm">
             <p class="font-medium mb-2">
               {{ option.title }}
@@ -147,6 +147,21 @@ export default {
       }, { amount: 0 })
 
       return lowestPrice || { amount: 10, currency_code: 'usd' }
+    },
+    // eslint-disable-next-line vue/return-in-computed-property
+    options () {
+      if (this.product.options) {
+        return this.product.options.map((option) => {
+          option.values = option.values.reduce((acc, curr) => {
+            if (!acc.find(val => val.value === curr.value)) {
+              return [...acc, { ...curr }]
+            }
+            return acc
+          }, [])
+
+          return option
+        })
+      }
     }
   }
 }
