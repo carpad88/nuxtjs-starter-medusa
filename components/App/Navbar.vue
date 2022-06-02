@@ -24,16 +24,8 @@
 
         <div class="flex items-center justify-end">
           <div class="hidden lg:flex">
-            <div class="inline-block relative text-left">
-              <div>
-                <button
-                  class="inline-flex justify-center w-full px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:text-gray-600"
-                  type="button"
-                >
-                  USA / USD
-                </button>
-              </div>
-            </div><div class="relative inline-block text-left">
+            <dropdowns-regions />
+            <div class="relative inline-block text-left">
               <div>
                 <button
                   class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-600"
