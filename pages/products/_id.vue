@@ -127,7 +127,7 @@ export default {
   },
   async fetch () {
     try {
-      const { product } = await this.$axios.$get(`/store/products/${this.$route.params.id}`)
+      const { product } = await this.$axios.$get(`/products/${this.$route.params.id}`)
       this.product = product
       this.imageToShow = this.product.images[0].id
     } catch (e) {
