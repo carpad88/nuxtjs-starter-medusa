@@ -40,8 +40,8 @@
         <h1 class="font-semibold text-3xl">
           {{ product.title }}
         </h1>
-        <p v-if="product.variants" class="text-lg mt-2 mb-4">
-          {{ product.variants[0].prices[0].amount/100 }} {{ product.variants[0].prices[0].currency_code }}
+        <p v-if="lowestPrice.currency_code" class="text-lg mt-2 mb-4">
+          {{ formatPrice(lowestPrice.amount, lowestPrice.currency_code) }}
         </p>
         <p v-else>
           10 USD
@@ -49,32 +49,23 @@
         <p class="font-light">
           {{ product.description }}
         </p>
-        <div v-for="option in options" :key="option.id" class="mt-6">
-          <div class="text-sm">
-            <p class="font-medium mb-2">
-              {{ option.title }}
-            </p>
-            <div>
-              <button
-                v-for="value in option.values"
-                :key="value.id"
-                class="bg-ui-dark text-white inline-flex items-center justify-center rounded-sm text-xs h-12 w-12 mr-2 last:mr-0 hover:bg-ui-dark hover:text-white"
-              >
-                {{ value.value }}
-              </button>
-            </div>
-          </div>
-        </div>
+
+        <products-options
+          :options="product.options"
+          @updateSelectedOptions="updateSelectedOptions"
+        />
+
         <div class="inline-flex mt-12">
-          <button class="btn-ui mr-2 px-12">
+          <button class="btn-ui mr-2 px-12" @click="addItem({variant_id, quantity})">
             Add to bag
           </button>
-          <div class="flex items-center rounded-md px-4 py-2 shadow">
-            <button>–</button>
-            <span class="w-8 text-center">1</span>
-            <button>+</button>
-          </div>
+          <quantity-selector
+            :quantity="quantity"
+            @increment="increment"
+            @decrement="decrement"
+          />
         </div>
+
         <div class="mt-12">
           <div class="border-t last:border-b border-ui-medium py-6">
             <h3 class="-my-3 flow-root">
@@ -106,6 +97,9 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import { formatPrice } from '@/utils/format-price'
+
 export default {
   name: 'ProductDetail',
   data () {
@@ -122,7 +116,10 @@ export default {
           { id: 'default_image', url: 'https://picsum.photos/600/400' },
           { id: 'another_image', url: 'https://picsum.photos/600/400?id=50' }
         ]
-      }
+      },
+      quantity: 1,
+      variant_id: null,
+      lowestPrice: {}
     }
   },
   async fetch () {
@@ -130,38 +127,51 @@ export default {
       const { product } = await this.$axios.$get(`/products/${this.$route.params.id}`)
       this.product = product
       this.imageToShow = this.product.images[0].id
+      this.filterLowestPrice()
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log('The server is not responding')
     }
   },
   computed: {
-    lowestPrice () {
-      const lowestPrice = this.product.variants.reduce((acc, curr) => {
-        return curr.prices.reduce((lowest, current) => {
-          if (lowest.amount > current.amount) {
-            return current
-          }
-          return lowest
-        })
-      }, { amount: 0 })
+    currencyCode () {
+      return this.$store.state.region.currency_code || 'usd'
+    }
+  },
+  watch: {
+    currencyCode () {
+      this.filterLowestPrice()
+    }
+  },
+  methods: {
+    ...mapActions({
+      addItem: 'cart/addItem'
+    }),
+    formatPrice,
+    updateSelectedOptions (value) {
+      const variant = this.product.variants.reduce((acc, cur) => {
+        return [...acc, {
+          variantId: cur.id,
+          options: cur.options.map(o => o.value)
+        }]
+      }, []).filter((variant) => {
+        return Object.values(value).sort().join('__') === variant.options.sort().join('__')
+      })
 
-      return lowestPrice || { amount: 10, currency_code: 'usd' }
+      this.variant_id = variant[0].variantId
     },
-    // eslint-disable-next-line vue/return-in-computed-property
-    options () {
-      if (this.product.options) {
-        return this.product.options.map((option) => {
-          option.values = option.values.reduce((acc, curr) => {
-            if (!acc.find(val => val.value === curr.value)) {
-              return [...acc, { ...curr }]
-            }
-            return acc
-          }, [])
-
-          return option
-        })
-      }
+    increment () {
+      this.quantity += 1
+    },
+    decrement () {
+      if (this.quantity > 1) { this.quantity -= 1 }
+    },
+    filterLowestPrice () {
+      this.lowestPrice = this.product.variants
+        .reduce((prices, cur) => {
+          return [...prices, ...cur.prices.filter(price => price.currency_code === this.currencyCode)]
+        }, [])
+        .sort((a, b) => a.amount - b.amount)[0]
     }
   }
 }

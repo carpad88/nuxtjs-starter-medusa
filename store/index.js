@@ -1,5 +1,6 @@
 const REGION = 'medusa_region'
 const COUNTRY = 'medusa_country'
+const CART_ID = 'cart_id'
 
 export const state = () => ({
   country: undefined,
@@ -38,6 +39,25 @@ export const actions = {
       } else {
         commit('UPDATE_REGION', { region: regions[0] })
       }
+    }
+  },
+
+  async initializeCart ({ state, commit }) {
+    const existingCartId = localStorage ? localStorage.getItem(CART_ID) : undefined
+
+    if (existingCartId) {
+      try {
+        const { data: { cart } } = await this.$axios(`/carts/${existingCartId}`)
+
+        if (!cart.completed_at) {
+          commit('cart/SET_CART', cart)
+        }
+      } catch (e) {
+        localStorage.removeItem(CART_ID)
+      }
+    } else {
+      const { cart } = await this.$axios.$post('/carts', { region_id: state.region.id, country_code: state.country.country_code })
+      commit('cart/SET_CART', cart)
     }
   },
 
