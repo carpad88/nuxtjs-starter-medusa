@@ -2,6 +2,7 @@
   <div class="relative text-left">
     <div v-if="$store.state.region">
       <button
+        v-click-outside="showCart"
         class="inline-flex justify-center w-full px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:text-gray-600 flex items-center"
         @click="showRegionsMenu = !showRegionsMenu"
       >

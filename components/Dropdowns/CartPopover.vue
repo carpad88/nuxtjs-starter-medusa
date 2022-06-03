@@ -2,6 +2,7 @@
   <div class="relative inline-block text-left">
     <div id="cartButton">
       <button
+        v-click-outside="showCart"
         class="inline-flex items-center justify-center w-full py-2 bg-white text-sm font-medium hover:opacity-1/2"
         @click="showCart = !showCart"
       >
