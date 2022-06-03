@@ -17,7 +17,7 @@
             {{ item.title }}
           </h3>
           <p class="text-sm font-semibold text-gray-900">
-            from {{ lowestPrice.amount/100 }} {{ lowestPrice.currency_code.toUpperCase() }}
+            from {{ formatPrice(lowestPrice.amount, lowestPrice.currency_code) }}
           </p>
         </div>
       </div>
@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import { formatPrice } from '~/utils/format-price'
+
 export default {
   name: 'ProductCard',
   props: {
@@ -43,17 +45,15 @@ export default {
   },
   computed: {
     lowestPrice () {
-      const lowestPrice = this.item.variants.reduce((acc, curr) => {
-        return curr.prices.reduce((lowest, current) => {
-          if (lowest.amount > current.amount) {
-            return current
-          }
-          return lowest
-        })
-      }, { amount: 0 })
-
-      return lowestPrice || { amount: 10, currency_code: 'usd' }
+      return this.item.variants
+        .reduce((prices, cur) => {
+          return [...prices, ...cur.prices.filter(price => price.currency_code === this.$store.getters['cart/cartCurrencyCode'])]
+        }, [])
+        .sort((a, b) => a.amount - b.amount)[0] || { amount: 1, currency_code: 'usd' }
     }
+  },
+  methods: {
+    formatPrice
   }
 }
 </script>

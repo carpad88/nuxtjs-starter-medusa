@@ -63,8 +63,8 @@ export const actions = {
 
   updateRegion ({ state, commit, dispatch }, payload) {
     commit('UPDATE_REGION', payload)
-    // dispatch('cart/updateCart', {
-    //   region_id: state.region.id
-    // })
+    dispatch('cart/updateCart', {
+      region_id: state.region.id
+    })
   }
 }

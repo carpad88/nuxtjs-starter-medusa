@@ -10,7 +10,7 @@
       v-if="products.length"
       class="grid grid-cols-4 gap-8 "
     >
-      <ProductCard
+      <products-card
         v-for="product in products"
         :key="product.id"
         :item="product"
