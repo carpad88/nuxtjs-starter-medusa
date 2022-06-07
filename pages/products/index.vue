@@ -34,7 +34,7 @@ export default {
   },
   async fetch () {
     try {
-      const { products } = await this.$axios.$get('/store/products')
+      const { products } = await this.$axios.$get('/products')
       this.products = products
     } catch (e) {
       // eslint-disable-next-line no-console
