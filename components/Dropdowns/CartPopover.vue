@@ -34,11 +34,11 @@
 
           <div class="flex flex-col mt-4">
             <div>
-              <div>
+              <nuxt-link to="/checkout">
                 <button class="btn-ui font-medium px-4 py-2 mb-2 text-sm w-full">
                   Checkout
                 </button>
-              </div>
+              </nuxt-link>
             </div>
             <div>
               <nuxt-link to="/shopping-bag">
