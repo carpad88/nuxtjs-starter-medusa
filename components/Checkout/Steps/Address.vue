@@ -146,7 +146,6 @@ export default {
         shipping_address: data,
         email: this.$store.state.cart.email
       })
-      this.$store.dispatch('cart/getCartShippingOptions')
       this.$emit('updateSteps', this.step)
     }
   }

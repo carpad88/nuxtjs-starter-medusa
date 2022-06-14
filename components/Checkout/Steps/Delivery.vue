@@ -91,6 +91,9 @@ export default {
       shippingMethod: 'cart/shippingMethod'
     })
   },
+  created () {
+    this.$store.dispatch('cart/getCartShippingOptions')
+  },
   methods: {
     formatPrice
   }
