@@ -22,7 +22,7 @@
         </div>
 
         <div>
-          <order-totals :order="order" />
+          <totals :item="order" />
         </div>
       </div>
     </div>

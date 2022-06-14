@@ -9,7 +9,7 @@
       />
     </div>
 
-    <checkout-totals />
+    <totals :item="$store.state.cart.cart" />
   </div>
 </template>
 

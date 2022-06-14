@@ -1,24 +1,24 @@
 <template>
   <div class="my-4 border-t bt-gray-100">
-    <div v-if="order" class="font-light text-sm space-y-3 mt-3">
+    <div class="font-light text-sm space-y-3 mt-3">
       <div class="flex items-center justify-between mb-2">
         <p>Subtotal</p>
         <p class="font-medium">
-          {{ formatPrice(order.subtotal, order.currency_code ) }}
+          {{ formatPrice(item.subtotal, currencyCode ) }}
         </p>
       </div>
 
-      <div class="flex items-center justify-between mb-2">
+      <div v-if="item.shipping_total" class="flex items-center justify-between mb-2">
         <p>Shipping</p>
         <p class="font-medium">
-          {{ formatPrice(order.shipping_total, order.currency_code) }}
+          {{ formatPrice(item.shipping_total, currencyCode) }}
         </p>
       </div>
 
       <div class="flex items-center justify-between mb-2">
         <p>Taxes</p>
         <p class="font-medium">
-          {{ formatPrice(order.tax_total, order.currency_code) }}
+          {{ formatPrice(item.tax_total, currencyCode) }}
         </p>
       </div>
 
@@ -27,7 +27,7 @@
       <div class="flex items-center justify-between">
         <p>Total</p>
         <p class="font-medium">
-          {{ formatPrice(order.total, order.currency_code) }}
+          {{ formatPrice(item.total, currencyCode) }}
         </p>
       </div>
     </div>
@@ -40,7 +40,15 @@ import { formatPrice } from '@/utils/format-price'
 export default {
   name: 'Totals',
   props: {
-    order: { type: Object, default () { return {} } }
+    item: {
+      type: Object,
+      default () { return {} }
+    }
+  },
+  computed: {
+    currencyCode () {
+      return this.item.currency_code || this.$store.getters['cart/cartCurrencyCode']
+    }
   },
   methods: {
     formatPrice
