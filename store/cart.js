@@ -11,6 +11,7 @@ export const getters = {
   cartCurrencyCode: state => state.cart.region.currency_code,
   shippingOptions: state => state.shippingOptions,
   shippingMethod: state => state.cart.shipping_methods[0]?.shipping_option_id,
+  paymentProviders: state => state.cart.payment_sessions || [],
   clientSecret: state => state.cart.payment_session?.data.client_secret || null
 }
 
@@ -73,8 +74,8 @@ export const actions = {
     commit('SET_CART', cart)
   },
 
-  async setPaymentSession ({ state, commit }) {
-    const { cart } = await this.$axios.$post(`/carts/${state.cart.id}/payment-session`, { provider_id: 'stripe' })
+  async setPaymentSession ({ state, commit }, providerId) {
+    const { cart } = await this.$axios.$post(`/carts/${state.cart.id}/payment-session`, { provider_id: providerId })
     commit('SET_CART', cart)
   },
 

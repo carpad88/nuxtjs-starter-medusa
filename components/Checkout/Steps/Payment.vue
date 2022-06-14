@@ -1,11 +1,29 @@
 <template>
   <checkout-step title="Payment" :show-success-icon="isCompleted">
     <div v-show="isOpen">
-      <div
-        id="stripe_container"
-        class="bg-white rounded-md p-6 shadow mt-4"
-        :class="errors ? 'border border-red-600' : ''"
-      />
+      <div class="flex my-8 uppercase" :class="providers.length > 1 ? 'space-x-4' : ''">
+        <div
+          v-for="{provider_id, id} in providers"
+          :key="id"
+          class="w-full px-4 py-2 border border-gray-300 rounded flex p-1 items-center justify-between cursor-pointer"
+          :class="provider === provider_id ? 'border-green-500' : ''"
+          @click="provider = provider_id"
+        >
+          <div>{{ provider_id }}</div>
+          <checkout-check-icon v-if="provider === provider_id" class="ml-2" />
+        </div>
+      </div>
+
+      <div v-show="provider === 'stripe'">
+        <div
+          id="stripe_container"
+          class="bg-white rounded-md p-6 shadow mt-4"
+          :class="errors ? 'border border-red-600' : ''"
+        />
+        <div v-if="errors" class="text-red-600 text-sm mt-2">
+          {{ errors }}
+        </div>
+      </div>
 
       <div class="flex items-center justify-between mt-4">
         <button
@@ -61,35 +79,54 @@ export default {
   },
   data () {
     return {
+      provider: null,
       card: null,
       errors: null
     }
   },
-  mounted () {
-    const elements = this.$stripe.elements()
-    const card = elements.create('card')
-    card.mount('#stripe_container')
-    this.card = card
+  computed: {
+    providers () {
+      return this.$store.getters['cart/paymentProviders']
+    }
+  },
+  watch: {
+    isOpen (val) {
+      if (val) {
+        this.$store.dispatch('cart/createPaymentSession')
+      }
+    },
+    provider (val) {
+      if (val === 'stripe') {
+        this.showStripeCard()
+      }
+    }
   },
   methods: {
+    showStripeCard () {
+      const elements = this.$stripe.elements()
+      const card = elements.create('card')
+      card.mount('#stripe_container')
+      this.card = card
+    },
     async processPayment () {
-      await this.$store.dispatch('cart/createPaymentSession')
-      await this.$store.dispatch('cart/setPaymentSession')
+      if (this.provider === 'stripe') {
+        await this.$store.dispatch('cart/setPaymentSession', this.provider)
 
-      const { error } = await this.$stripe.confirmCardPayment(this.$store.getters['cart/clientSecret'], {
-        payment_method: {
-          card: this.card,
-          billing_details: {
-            email: this.email
+        const { error } = await this.$stripe.confirmCardPayment(this.$store.getters['cart/clientSecret'], {
+          payment_method: {
+            card: this.card,
+            billing_details: {
+              email: this.email
+            }
           }
+        })
+
+        if (error) { this.errors = error.message }
+
+        if (!error) {
+          const { id } = await this.$store.dispatch('cart/completeCart')
+          this.$router.push(`order-summary/${id}`)
         }
-      })
-
-      if (error) { this.errors = error.message }
-
-      if (!error) {
-        const { id } = await this.$store.dispatch('cart/completeCart')
-        this.$router.push(`order-summary/${id}`)
       }
     }
   }
