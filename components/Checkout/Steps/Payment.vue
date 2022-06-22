@@ -90,9 +90,10 @@ export default {
     }
   },
   watch: {
-    isOpen (val) {
-      if (val) {
-        this.$store.dispatch('cart/createPaymentSession')
+    async isOpen (val) {
+      if (val && !this.providers.length) {
+        await this.$store.dispatch('cart/createPaymentSession')
+        await this.$store.dispatch('cart/setPaymentSession', this.providers[0].provider_id)
       }
     },
     provider (val) {
